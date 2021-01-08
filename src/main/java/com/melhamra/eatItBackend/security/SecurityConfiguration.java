@@ -32,7 +32,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL)
                 .permitAll()
                 .anyRequest().authenticated()
-                ;
+                .and()
+                .addFilter(getAuthenticationFilter());
+    }
+
+    protected AuthenticationFilter getAuthenticationFilter() throws Exception {
+        final AuthenticationFilter authenticationFilter = new AuthenticationFilter(authenticationManager());
+        authenticationFilter.setFilterProcessesUrl("/users/login");
+        return authenticationFilter;
     }
 
     @Bean

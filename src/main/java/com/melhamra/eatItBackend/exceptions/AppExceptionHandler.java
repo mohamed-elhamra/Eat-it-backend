@@ -31,4 +31,12 @@ public class AppExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
     }
 
+    @ExceptionHandler(value = {Exception.class})
+    public ResponseEntity<Object> othersExceptionHandler(Exception ex, WebRequest rq){
+        ErrorMessage errorMessage = new ErrorMessage();
+        errorMessage.setTimestamp(new Date());
+        errorMessage.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
+    }
+
 }
