@@ -33,7 +33,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .addFilter(getAuthenticationFilter());
+                .addFilter(getAuthenticationFilter())
+                .addFilter(new AuthorizationFilter(authenticationManager()));
     }
 
     protected AuthenticationFilter getAuthenticationFilter() throws Exception {
