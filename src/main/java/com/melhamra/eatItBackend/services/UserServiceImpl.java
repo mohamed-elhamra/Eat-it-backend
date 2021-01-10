@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
@@ -34,10 +34,14 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserDto createUser(UserDto userDto) {
         Optional<UserEntity> userByEmail = userRepository.findByEmail(userDto.getEmail());
-        userByEmail.ifPresent(user -> {throw new RuntimeException("User already exits with this email !");});
+        userByEmail.ifPresent(user -> {
+            throw new RuntimeException("User already exits with this email !");
+        });
 
         Optional<UserEntity> userByPhone = userRepository.findByPhone(userDto.getPhone());
-        userByPhone.ifPresent(user -> {throw new RuntimeException("User already exits with this phone !");});
+        userByPhone.ifPresent(user -> {
+            throw new RuntimeException("User already exits with this phone !");
+        });
 
         UserEntity createdUser = modelMapper.map(userDto, UserEntity.class);
         createdUser.setUserId(idGenerator.generateStringId(30));
@@ -62,7 +66,7 @@ public class UserServiceImpl implements UserService{
 
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         Arrays.stream(user.getRoles().split(","))
-                .forEach(role-> authorities.add(new SimpleGrantedAuthority(role)));
+                .forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
 
         return new User(user.getEmail(), user.getEncryptedPassword(), authorities);
     }
