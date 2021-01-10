@@ -1,10 +1,14 @@
 package com.melhamra.eatItBackend.requests;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserRequest {
 
     @NotBlank(message = "Full name should not be empty")
