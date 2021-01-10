@@ -31,4 +31,9 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
+
+    @GetMapping
+    public String hello(){
+        return "Hello";
+    }
 }
