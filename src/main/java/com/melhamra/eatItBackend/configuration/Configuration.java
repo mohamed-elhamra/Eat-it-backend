@@ -20,13 +20,4 @@ public class Configuration {
         return new SpringApplicationContext();
     }
 
-    @Bean
-    CommandLineRunner start(){
-        return args -> {
-            String name= "mohamed";
-            Arrays.stream(name.split(",")).forEach(System.out::println);
-            System.out.println(SpringApplicationContext.getBean("userServiceImpl").toString());
-        };
-    }
-
 }

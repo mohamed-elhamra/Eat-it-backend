@@ -9,14 +9,28 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.melhamra</groupId>
-	<artifactId>orderingAppBackend</artifactId>
+	<artifactId>eatItBackend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>orderingAppBackend</name>
+	<name>eatItBackend</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
 		<java.version>11</java.version>
 	</properties>
+
+	<profiles>
+		<profile>
+			<id>sonar</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<sonar.host.url>
+					http://localhost:9000
+				</sonar.host.url>
+			</properties>
+		</profile>
+	</profiles>
 
 	<dependencies>
 		<dependency>

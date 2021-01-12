@@ -4,6 +4,7 @@ import com.melhamra.eatItBackend.dtos.UserDto;
 import com.melhamra.eatItBackend.entities.UserEntity;
 import com.melhamra.eatItBackend.repositories.UserRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
@@ -17,6 +18,10 @@ import java.util.Optional;
 @SpringBootTest
 class UserServiceImplTest {
 
+    private static String email;
+    private static UserEntity userEntity;
+    private static UserDto userDto;
+
     @Autowired
     private UserService userService;
 
@@ -26,12 +31,19 @@ class UserServiceImplTest {
     @MockBean
     private UserRepository userRepository;
 
-    @Test
-    void getUserByEmail() {
-        String email = "mohamed@gmail.com";
-        UserEntity userEntity =
+    @BeforeAll
+    public static void init() {
+        email = "mohamed@gmail.com";
+        userEntity =
                 new UserEntity(1L, "azdazda", "mohamed elhamra",
                         "mohamed@gmail.com", "066666666", "zefezfzef", "user");
+        userDto =
+                new UserDto(1L, "aabtert", "mohamed elhamra",
+                        "mohamed@gmail.com", "067875599", "mohamed", "atrfedr", "user");
+    }
+
+    @Test
+    void getUserByEmail() {
         Mockito.when(userRepository.findByEmail(email))
                 .thenReturn(Optional.of(userEntity));
         Assertions.assertEquals(modelMapper.map(userEntity, UserDto.class), userService.getUserByEmail(email));
@@ -39,10 +51,6 @@ class UserServiceImplTest {
 
     @Test
     void createUserTest() {
-        UserDto userDto =
-                new UserDto(1L, "aabtert", "mohamed elhamra",
-                        "mohamed@gmail.com", "067875599", "mohamed", "atrfedr", "user");
-
         Mockito.when(userRepository.findByEmail(userDto.getEmail()))
                 .thenReturn(Optional.empty());
         Mockito.when(userRepository.findByPhone(userDto.getPhone()))
@@ -52,5 +60,12 @@ class UserServiceImplTest {
         Mockito.when(userRepository.save(Mockito.any(UserEntity.class))).thenReturn(userEntity);
 
         Assertions.assertEquals(userDto.getEmail(), userService.createUser(userDto).getEmail());
+    }
+
+    @Test
+    void loadUserByUsernameTest() {
+        Mockito.when(userRepository.findByEmail(email))
+                .thenReturn(Optional.of(userEntity));
+        Assertions.assertEquals(userEntity.getEmail(), userService.loadUserByUsername(email).getUsername());
     }
 }
