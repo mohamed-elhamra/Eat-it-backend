@@ -1,5 +1,6 @@
 package com.melhamra.eatItBackend.services;
 
+import com.melhamra.eatItBackend.dtos.ImageDto;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,7 +11,7 @@ public interface ImageService {
 
     void init();
 
-    void save(MultipartFile file);
+    ImageDto save(MultipartFile file);
 
     Resource load(String filename);
 

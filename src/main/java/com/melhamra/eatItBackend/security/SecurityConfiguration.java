@@ -31,6 +31,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers(HttpMethod.GET, SecurityConstants.SIGN_UP_URL)
                 .permitAll()
+                .antMatchers(HttpMethod.GET, "/images/*")
+                .permitAll()
                 .antMatchers(HttpMethod.POST, "/images/upload").hasAuthority("admin")
                 .anyRequest().authenticated()
                 .and()

@@ -1,5 +1,11 @@
 package com.melhamra.eatItBackend.services;
 
+import com.melhamra.eatItBackend.dtos.ImageDto;
+import com.melhamra.eatItBackend.entities.ImageEntity;
+import com.melhamra.eatItBackend.repositories.ImageRepository;
+import com.melhamra.eatItBackend.utils.IDGenerator;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -10,6 +16,8 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -17,6 +25,14 @@ import java.util.stream.Stream;
 public class ImageServiceImpl implements ImageService{
 
     private final Path root = Paths.get("uploads");
+    private final String url = "http://192.168.1.153:8081/api/images/";
+
+    @Autowired
+    private IDGenerator idGenerator;
+    @Autowired
+    private ImageRepository imageRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public void init() {
@@ -30,9 +46,23 @@ public class ImageServiceImpl implements ImageService{
     }
 
     @Override
-    public void save(MultipartFile file) {
+    public ImageDto save(MultipartFile file) {
         try {
-            Files.copy(file.getInputStream(), this.root.resolve(Objects.requireNonNull(file.getOriginalFilename())));
+            String imageExtension = Objects.requireNonNull(file.getOriginalFilename()).split("\\.")[1];
+            List<String> extensions = Arrays.asList("JPEG", "PNG", "JPG", "jpeg", "png", "jpg");
+
+            if(extensions.contains(imageExtension)){
+                String imageID = idGenerator.generateStringId(15);
+                String imageUrl = url + imageID + "." + imageExtension;
+                String imageName = imageID + "." + imageExtension;
+                ImageEntity imageEntity = new ImageEntity(null, imageID, imageName, imageUrl);
+                Files.copy(file.getInputStream(), this.root.resolve(imageName));
+
+                return modelMapper.map(imageRepository.save(imageEntity), ImageDto.class);
+            }else {
+                throw new RuntimeException("File extension allowed (png, jpeg, jpg) !");
+            }
+
         } catch (Exception e) {
             throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
         }

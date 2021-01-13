@@ -1,14 +1,23 @@
 package com.melhamra.eatItBackend.controllers;
 
+import com.melhamra.eatItBackend.dtos.ImageDto;
+import com.melhamra.eatItBackend.entities.ImageEntity;
+import com.melhamra.eatItBackend.responses.ImageResponse;
 import com.melhamra.eatItBackend.services.ImageService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/images")
@@ -16,19 +25,35 @@ public class ImageController {
 
     @Autowired
     ImageService imageService;
+    @Autowired
+    ModelMapper modelMapper;
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("image") MultipartFile file) {
-        String message;
-        try {
-            imageService.save(file);
+    public ResponseEntity<ImageResponse> uploadFile(@RequestParam("image") MultipartFile image) {
+        ImageResponse imageResponse = modelMapper.map(imageService.save(image), ImageResponse.class);
 
-            message = "Uploaded the file successfully: " + file.getOriginalFilename();
-            return ResponseEntity.status(HttpStatus.CREATED).body(message);
-        } catch (Exception e) {
-            message = "Could not upload the file: " + file.getOriginalFilename() + "!";
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
-        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(imageResponse);
+    }
+
+    @GetMapping("/{imageName:.+}")
+    public ResponseEntity<Resource> getImage(@PathVariable String imageName) {
+        Resource file = imageService.load(imageName);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ImageEntity>> getListImaged() {
+        List<ImageEntity> fileInfos = imageService.loadAll().map(path -> {
+            String filename = path.getFileName().toString();
+            String url = MvcUriComponentsBuilder
+                    .fromMethodName(ImageController.class, "getImage", path.getFileName().toString()).build().toString();
+
+            //return new ImageEntity(filename, url);
+            return new ImageEntity();
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
     }
 
 }
