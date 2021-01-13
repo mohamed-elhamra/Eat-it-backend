@@ -1,8 +1,10 @@
 package com.melhamra.eatItBackend.services;
 
+import com.melhamra.eatItBackend.controllers.ImageController;
 import com.melhamra.eatItBackend.dtos.ImageDto;
 import com.melhamra.eatItBackend.entities.ImageEntity;
 import com.melhamra.eatItBackend.repositories.ImageRepository;
+import com.melhamra.eatItBackend.responses.ImageResponse;
 import com.melhamra.eatItBackend.utils.IDGenerator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -19,6 +22,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -87,9 +91,20 @@ public class ImageServiceImpl implements ImageService{
     }
 
     @Override
-    public Stream<Path> loadAll() {
+    public List<ImageResponse> loadAll() {
         try {
-            return Files.walk(this.root, 1).filter(path -> !path.equals(this.root)).map(this.root::relativize);
+            Stream<Path> imagesPath = Files.walk(this.root, 1).filter(path -> !path.equals(this.root)).map(this.root::relativize);
+
+            return imagesPath.map(path -> {
+                String imageName = path.getFileName().toString();
+                String imageId = imageName.split("\\.")[0];
+                String url1 = MvcUriComponentsBuilder
+                        .fromMethodName(ImageController.class, "getImage", imageId)
+                        .build()
+                        .toString();
+
+                return new ImageResponse(imageId, imageName, url1);
+            }).collect(Collectors.toList());
         } catch (IOException e) {
             throw new RuntimeException("Could not load the files!");
         }

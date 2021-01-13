@@ -1,10 +1,12 @@
 package com.melhamra.eatItBackend.services;
 
 import com.melhamra.eatItBackend.dtos.ImageDto;
+import com.melhamra.eatItBackend.responses.ImageResponse;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.stream.Stream;
 
 public interface ImageService {
@@ -15,6 +17,6 @@ public interface ImageService {
 
     Resource load(String imageId);
 
-    Stream<Path> loadAll();
+    List<ImageResponse> loadAll();
 
 }

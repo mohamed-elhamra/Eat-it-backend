@@ -15,7 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -29,31 +31,22 @@ public class ImageController {
     ModelMapper modelMapper;
 
     @PostMapping("/upload")
-    public ResponseEntity<ImageResponse> uploadFile(@RequestParam("image") MultipartFile image) {
-        ImageResponse imageResponse = modelMapper.map(imageService.save(image), ImageResponse.class);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(imageResponse);
+    public ResponseEntity<ImageResponse> uploadImage(@RequestParam("image") MultipartFile image) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(modelMapper.map(imageService.save(image), ImageResponse.class));
     }
 
     @GetMapping("/{imageId}")
     public ResponseEntity<Resource> getImage(@PathVariable String imageId) {
         Resource image = imageService.load(imageId);
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getFilename() + "\"").body(image);
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getFilename() + "\"")
+                .body(image);
     }
 
     @GetMapping
-    public ResponseEntity<List<ImageEntity>> getListImaged() {
-        List<ImageEntity> fileInfos = imageService.loadAll().map(path -> {
-            String filename = path.getFileName().toString();
-            String url = MvcUriComponentsBuilder
-                    .fromMethodName(ImageController.class, "getImage", path.getFileName().toString()).build().toString();
-
-            //return new ImageEntity(filename, url);
-            return new ImageEntity();
-        }).collect(Collectors.toList());
-
-        return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
+    public ResponseEntity<List<ImageResponse>> getListImages() {
+        return ResponseEntity.status(HttpStatus.OK).body(imageService.loadAll());
     }
 
 }
