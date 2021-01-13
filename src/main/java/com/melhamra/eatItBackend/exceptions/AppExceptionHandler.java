@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -29,6 +30,14 @@ public class AppExceptionHandler {
         errorMessage.setTimestamp(new Date());
         errorMessage.setMessage(ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ErrorMessage> handleMaxSizeException(MaxUploadSizeExceededException ex) {
+        ErrorMessage errorMessage = new ErrorMessage();
+        errorMessage.setTimestamp(new Date());
+        errorMessage.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(errorMessage);
     }
 
     @ExceptionHandler(value = {Exception.class})
