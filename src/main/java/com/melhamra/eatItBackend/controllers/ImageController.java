@@ -35,11 +35,11 @@ public class ImageController {
         return ResponseEntity.status(HttpStatus.CREATED).body(imageResponse);
     }
 
-    @GetMapping("/{imageName:.+}")
-    public ResponseEntity<Resource> getImage(@PathVariable String imageName) {
-        Resource file = imageService.load(imageName);
+    @GetMapping("/{imageId}")
+    public ResponseEntity<Resource> getImage(@PathVariable String imageId) {
+        Resource image = imageService.load(imageId);
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getFilename() + "\"").body(image);
     }
 
     @GetMapping

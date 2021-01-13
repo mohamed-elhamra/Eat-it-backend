@@ -24,20 +24,20 @@ public class AppExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
-    @ExceptionHandler(value = {RuntimeException.class})
-    public ResponseEntity<Object> othersExceptionHandler(RuntimeException ex, WebRequest rq){
-        ErrorMessage errorMessage = new ErrorMessage();
-        errorMessage.setTimestamp(new Date());
-        errorMessage.setMessage(ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
-    }
-
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<ErrorMessage> handleMaxSizeException(MaxUploadSizeExceededException ex) {
         ErrorMessage errorMessage = new ErrorMessage();
         errorMessage.setTimestamp(new Date());
         errorMessage.setMessage(ex.getMessage());
         return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(errorMessage);
+    }
+
+    @ExceptionHandler(value = {RuntimeException.class})
+    public ResponseEntity<Object> othersExceptionHandler(RuntimeException ex, WebRequest rq){
+        ErrorMessage errorMessage = new ErrorMessage();
+        errorMessage.setTimestamp(new Date());
+        errorMessage.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
     }
 
     @ExceptionHandler(value = {Exception.class})

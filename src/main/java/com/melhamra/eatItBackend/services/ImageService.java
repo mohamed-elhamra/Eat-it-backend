@@ -13,7 +13,7 @@ public interface ImageService {
 
     ImageDto save(MultipartFile file);
 
-    Resource load(String filename);
+    Resource load(String imageId);
 
     Stream<Path> loadAll();
 

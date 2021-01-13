@@ -53,7 +53,7 @@ public class ImageServiceImpl implements ImageService{
 
             if(extensions.contains(imageExtension)){
                 String imageID = idGenerator.generateStringId(15);
-                String imageUrl = url + imageID + "." + imageExtension;
+                String imageUrl = url + imageID;
                 String imageName = imageID + "." + imageExtension;
                 ImageEntity imageEntity = new ImageEntity(null, imageID, imageName, imageUrl);
                 Files.copy(file.getInputStream(), this.root.resolve(imageName));
@@ -69,9 +69,11 @@ public class ImageServiceImpl implements ImageService{
     }
 
     @Override
-    public Resource load(String imageName) {
+    public Resource load(String imageId) {
         try {
-            Path image = root.resolve(imageName);
+            ImageEntity imageEntity = imageRepository.findByImageId(imageId)
+                    .orElseThrow(() -> new RuntimeException("Image not found with this id: " + imageId));
+            Path image = root.resolve(imageEntity.getName());
             Resource resource = new UrlResource(image.toUri());
 
             if (resource.exists() || resource.isReadable()) {
