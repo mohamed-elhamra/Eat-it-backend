@@ -19,9 +19,13 @@ public class ProductEntity {
     @Column(length = 20, nullable = false)
     private String name;
     @Lob
-    @Column(nullable = false,length=512)
+    @Column(nullable = false, length = 512)
     private String description;
     @Column(nullable = false)
     private double price;
+
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "image_id", referencedColumnName = "id")
+    private ImageEntity image;
 
 }

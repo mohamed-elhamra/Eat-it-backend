@@ -8,6 +8,7 @@ import com.melhamra.eatItBackend.responses.ImageResponse;
 import com.melhamra.eatItBackend.utils.IDGenerator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -26,10 +27,14 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
-public class ImageServiceImpl implements ImageService{
+public class ImageServiceImpl implements ImageService {
+
+    private String host;
 
     private final Path root = Paths.get("uploads");
-    private final String url = "http://192.168.1.153:8081/api/images/";
+
+    @Autowired
+    Environment environment;
 
     @Autowired
     private IDGenerator idGenerator;
@@ -40,11 +45,14 @@ public class ImageServiceImpl implements ImageService{
 
     @Override
     public void init() {
+        String port = environment.getProperty("server.port");
+        String address = environment.getProperty("server.address");
+        host = "http://" + address + ":" + port + "/api/images/";
         try {
-            if(!Files.exists(root)){
+            if (!Files.exists(root)) {
                 Files.createDirectory(root);
             }
-        }catch (IOException e){
+        } catch (IOException e) {
             throw new RuntimeException("Could not initialize folder for upload!");
         }
     }
@@ -55,15 +63,15 @@ public class ImageServiceImpl implements ImageService{
             String imageExtension = Objects.requireNonNull(file.getOriginalFilename()).split("\\.")[1];
             List<String> extensions = Arrays.asList("JPEG", "PNG", "JPG", "jpeg", "png", "jpg");
 
-            if(extensions.contains(imageExtension)){
+            if (extensions.contains(imageExtension)) {
                 String imageID = idGenerator.generateStringId(15);
-                String imageUrl = url + imageID;
+                String imageUrl = host + imageID;
                 String imageName = imageID + "." + imageExtension;
                 ImageEntity imageEntity = new ImageEntity(null, imageID, imageName, imageUrl);
                 Files.copy(file.getInputStream(), this.root.resolve(imageName));
 
                 return modelMapper.map(imageRepository.save(imageEntity), ImageDto.class);
-            }else {
+            } else {
                 throw new RuntimeException("File extension allowed (png, jpeg, jpg) !");
             }
 
