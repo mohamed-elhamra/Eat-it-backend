@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -26,6 +29,13 @@ public class ProductServiceImpl implements ProductService {
         ProductEntity createdProduct = productRepository.save(modelMapper.map(productDto, ProductEntity.class));
 
         return modelMapper.map(createdProduct, ProductDto.class);
+    }
+
+    @Override
+    public List<ProductDto> getAllProducts() {
+        return productRepository.findAll().stream()
+                .map(productEntity -> modelMapper.map(productEntity, ProductDto.class))
+                .collect(Collectors.toList());
     }
 
 }

@@ -7,11 +7,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/products")
@@ -32,6 +32,14 @@ public class ProductController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(modelMapper.map(createdProduct, ProductResponse.class));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ProductResponse>> getAllProducts(){
+        List<ProductResponse> products = productService.getAllProducts().stream()
+                .map(productDto -> modelMapper.map(productDto, ProductResponse.class))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(products);
     }
 
 }
