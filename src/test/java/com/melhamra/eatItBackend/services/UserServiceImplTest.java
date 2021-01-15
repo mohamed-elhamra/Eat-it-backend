@@ -34,12 +34,12 @@ class UserServiceImplTest {
     @BeforeAll
     public static void init() {
         email = "mohamed@gmail.com";
-        /*userEntity =
+        userEntity =
                 new UserEntity(1L, "azdazda", "mohamed elhamra",
-                        "mohamed@gmail.com", "066666666", "zefezfzef", "user");*/
-        /*userDto =
+                        "mohamed@gmail.com", "066666666", "zefezfzef", "user", null);
+        userDto =
                 new UserDto(1L, "aabtert", "mohamed elhamra",
-                        "mohamed@gmail.com", "067875599", "mohamed", "atrfedr", "user");*/
+                        "mohamed@gmail.com", "067875599", "mohamed", "atrfedr", "user");
     }
 
     @Test

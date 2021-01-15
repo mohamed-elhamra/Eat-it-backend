@@ -1,7 +1,6 @@
 package com.melhamra.eatItBackend.configuration;
 
 import com.melhamra.eatItBackend.services.ImageService;
-import com.melhamra.eatItBackend.utils.OrderStatus;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +24,7 @@ public class Configuration {
     }
 
     @Bean
-    public CommandLineRunner start(){
+    public CommandLineRunner start() {
         return args -> imageService.init();
     }
 

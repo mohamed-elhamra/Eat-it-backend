@@ -51,6 +51,8 @@ public class OrderServiceImpl implements OrderService {
         OrderResponse orderResponse = new OrderResponse();
         orderResponse.setPublicId(savedOrder.getPublicId());
         orderResponse.setAddress(savedOrder.getAddress());
+        orderResponse.setDate(savedOrder.getDate());
+        orderResponse.setStatus(savedOrder.getStatus());
         orderResponse.setUserPublicId(user.getPublicId());
 
         orderRequest.getOrderProducts().forEach(orderProductRequest -> {
@@ -60,7 +62,9 @@ public class OrderServiceImpl implements OrderService {
                     new OrderProductEntity(null, orderProductRequest.getQuantity(), savedOrder, product);
             OrderProductEntity savedOrderProductEntity = orderProductRepository.save(orderProductEntity);
             orderResponse.getOrderProducts()
-                    .add(new OrderProductResponse(savedOrderProductEntity.getQuantity(), savedOrderProductEntity.getProduct().getPublicId()));
+                    .add(new OrderProductResponse(savedOrderProductEntity.getQuantity(),
+                            savedOrderProductEntity.getProduct().getPublicId(),
+                            savedOrderProductEntity.getProduct().getName()));
         });
         return orderResponse;
     }
