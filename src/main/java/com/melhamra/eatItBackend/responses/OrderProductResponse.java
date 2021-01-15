@@ -1,6 +1,5 @@
 package com.melhamra.eatItBackend.responses;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,10 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ImageResponse {
+public class OrderProductResponse {
 
-    private String publicId;
-    private String name;
-    private String url;
+    private int quantity;
+    private String productPublicId;
 
 }

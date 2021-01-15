@@ -4,6 +4,7 @@ import com.melhamra.eatItBackend.dtos.ImageDto;
 import com.melhamra.eatItBackend.dtos.ProductDto;
 import com.melhamra.eatItBackend.entities.ProductEntity;
 import com.melhamra.eatItBackend.repositories.ProductRepository;
+import com.melhamra.eatItBackend.utils.IDGenerator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,11 +22,14 @@ public class ProductServiceImpl implements ProductService {
     ImageService imageService;
     @Autowired
     ModelMapper modelMapper;
+    @Autowired
+    IDGenerator idGenerator;
 
     @Override
     public ProductDto createProduct(ProductDto productDto, MultipartFile multipartFile) {
         ImageDto imageDto = imageService.save(multipartFile);
         productDto.setImage(imageDto);
+        productDto.setPublicId(idGenerator.generateStringId(30));
         ProductEntity createdProduct = productRepository.save(modelMapper.map(productDto, ProductEntity.class));
 
         return modelMapper.map(createdProduct, ProductDto.class);

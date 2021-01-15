@@ -3,6 +3,7 @@ package com.melhamra.eatItBackend.services;
 import com.melhamra.eatItBackend.controllers.ImageController;
 import com.melhamra.eatItBackend.dtos.ImageDto;
 import com.melhamra.eatItBackend.entities.ImageEntity;
+import com.melhamra.eatItBackend.exceptions.EatItException;
 import com.melhamra.eatItBackend.repositories.ImageRepository;
 import com.melhamra.eatItBackend.responses.ImageResponse;
 import com.melhamra.eatItBackend.utils.IDGenerator;
@@ -53,7 +54,7 @@ public class ImageServiceImpl implements ImageService {
                 Files.createDirectory(root);
             }
         } catch (IOException e) {
-            throw new RuntimeException("Could not initialize folder for upload!");
+            throw new EatItException("Could not initialize folder for upload!");
         }
     }
 
@@ -72,18 +73,18 @@ public class ImageServiceImpl implements ImageService {
 
                 return modelMapper.map(imageRepository.save(imageEntity), ImageDto.class);
             } else {
-                throw new RuntimeException("File extension allowed (png, jpeg, jpg) !");
+                throw new EatItException("File extension allowed (png, jpeg, jpg) !");
             }
 
         } catch (Exception e) {
-            throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
+            throw new EatItException("Could not store the file. Error: " + e.getMessage());
         }
     }
 
     @Override
     public Resource load(String imageId) {
         try {
-            ImageEntity imageEntity = imageRepository.findByImageId(imageId)
+            ImageEntity imageEntity = imageRepository.findByPublicId(imageId)
                     .orElseThrow(() -> new RuntimeException("Image not found with this id: " + imageId));
             Path image = root.resolve(imageEntity.getName());
             Resource resource = new UrlResource(image.toUri());
@@ -91,10 +92,10 @@ public class ImageServiceImpl implements ImageService {
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new RuntimeException("Could not read the file!");
+                throw new EatItException("Could not read the file!");
             }
         } catch (MalformedURLException e) {
-            throw new RuntimeException("Error: " + e.getMessage());
+            throw new EatItException("Error: " + e.getMessage());
         }
     }
 
@@ -114,7 +115,7 @@ public class ImageServiceImpl implements ImageService {
                 return new ImageResponse(imageId, imageName, url1);
             }).collect(Collectors.toList());
         } catch (IOException e) {
-            throw new RuntimeException("Could not load the files!");
+            throw new EatItException("Could not load the files!");
         }
     }
 }

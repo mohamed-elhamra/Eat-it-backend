@@ -27,7 +27,7 @@ public class ProductController {
                                                          @RequestParam("description") String description,
                                                          @RequestParam("price") double price,
                                                          @RequestParam("image") MultipartFile image){
-        ProductDto productDto = new ProductDto(null, name, description, price, null);
+        ProductDto productDto = new ProductDto(null,null, name, description, price, null);
         ProductDto createdProduct = productService.createProduct(productDto, image);
 
         return ResponseEntity.status(HttpStatus.CREATED)

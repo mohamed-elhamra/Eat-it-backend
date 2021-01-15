@@ -32,6 +32,14 @@ public class AppExceptionHandler {
         return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(errorMessage);
     }
 
+    @ExceptionHandler(value = {EatItException.class})
+    public ResponseEntity<Object> eatItExceptionHandler(EatItException ex, WebRequest rq){
+        ErrorMessage errorMessage = new ErrorMessage();
+        errorMessage.setTimestamp(new Date());
+        errorMessage.setMessage(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
+    }
+
     @ExceptionHandler(value = {RuntimeException.class})
     public ResponseEntity<Object> othersExceptionHandler(RuntimeException ex, WebRequest rq){
         ErrorMessage errorMessage = new ErrorMessage();

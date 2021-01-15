@@ -2,6 +2,7 @@ package com.melhamra.eatItBackend.services;
 
 import com.melhamra.eatItBackend.dtos.UserDto;
 import com.melhamra.eatItBackend.entities.UserEntity;
+import com.melhamra.eatItBackend.exceptions.EatItException;
 import com.melhamra.eatItBackend.repositories.UserRepository;
 import com.melhamra.eatItBackend.utils.IDGenerator;
 import org.modelmapper.ModelMapper;
@@ -35,16 +36,16 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserDto userDto) {
         Optional<UserEntity> userByEmail = userRepository.findByEmail(userDto.getEmail());
         userByEmail.ifPresent(user -> {
-            throw new RuntimeException("User already exits with this email !");
+            throw new EatItException("User already exits with this email !");
         });
 
         Optional<UserEntity> userByPhone = userRepository.findByPhone(userDto.getPhone());
         userByPhone.ifPresent(user -> {
-            throw new RuntimeException("User already exits with this phone !");
+            throw new EatItException("User already exits with this phone !");
         });
 
         UserEntity createdUser = modelMapper.map(userDto, UserEntity.class);
-        createdUser.setUserId(idGenerator.generateStringId(30));
+        createdUser.setPublicId(idGenerator.generateStringId(30));
         createdUser.setEncryptedPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
 
         return modelMapper.map(userRepository.save(createdUser), UserDto.class);

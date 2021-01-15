@@ -6,19 +6,24 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity(name = "images")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ImageEntity {
+@Entity(name = "orders_products")
+public class OrderProductEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private String publicId;
-    @Column(nullable = false)
-    private String name;
-    @Column(nullable = false)
-    private String url;
+    private int quantity;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private OrderEntity order;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private ProductEntity product;
+
 }

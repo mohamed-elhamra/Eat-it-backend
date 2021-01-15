@@ -24,7 +24,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationFilter(AuthenticationManager authenticationManager){
+    public AuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
 
@@ -49,7 +49,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         String jwt = Jwts.builder()
                 .setSubject(user.getEmail())
-                .claim("id", user.getUserId())
+                .claim("id", user.getPublicId())
                 .claim("name", user.getFullName())
                 .claim("roles", springUser.getAuthorities())
                 .setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
@@ -57,8 +57,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .compact();
 
         response.addHeader(SecurityConstants.HEADER_STRING, jwt);
-        response.addHeader("id", user.getUserId());
+        response.addHeader("id", user.getPublicId());
         response.getWriter()
-                .write("{\"token\": \""+jwt+"\", \"id\": \""+user.getUserId()+"\"}");
+                .write("{\"token\": \"" + jwt + "\", \"id\": \"" + user.getPublicId() + "\"}");
     }
 }

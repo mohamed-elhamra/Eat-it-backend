@@ -1,36 +1,36 @@
 package com.melhamra.eatItBackend.entities;
 
-
+import com.melhamra.eatItBackend.utils.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "products")
-public class ProductEntity {
+@Entity(name = "orders")
+public class OrderEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String publicId;
-    @Column(length = 20, nullable = false)
-    private String name;
-    @Lob
-    @Column(nullable = false, length = 512)
-    private String description;
+    @Column(length = 50, nullable = false)
+    private String address;
     @Column(nullable = false)
-    private double price;
+    private Instant date;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "image_id", referencedColumnName = "id")
-    private ImageEntity image;
+    private OrderStatus status;
 
-    @OneToMany(mappedBy = "product")
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
+    @OneToMany(mappedBy = "order")
     private List<OrderProductEntity> orderProducts;
 
 }

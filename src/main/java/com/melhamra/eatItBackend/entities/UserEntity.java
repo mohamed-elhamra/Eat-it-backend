@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -15,7 +16,7 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String userId;
+    private String publicId;
     @Column(length = 20, nullable = false)
     private String fullName;
     @Column(length = 20, nullable = false, unique = true)
@@ -26,5 +27,8 @@ public class UserEntity {
     private String encryptedPassword;
     @Column(nullable = false)
     private String roles;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<OrderEntity> orders;
 
 }
