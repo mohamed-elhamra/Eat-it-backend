@@ -23,7 +23,8 @@ public class OrderEntity {
     private String address;
     @Column(nullable = false)
     private Instant date;
-
+    @Enumerated(EnumType.STRING)
+    @Column(length = 10, nullable = false)
     private OrderStatus status;
 
     @ManyToOne

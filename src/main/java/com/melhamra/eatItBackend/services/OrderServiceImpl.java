@@ -44,7 +44,7 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new EatItException("No user found with this id: " + orderRequest.getUserPublicId()));
         OrderEntity orderEntity =
                 new OrderEntity(null, idGenerator.generateStringId(20),
-                        orderRequest.getAddress(), Instant.now(), OrderStatus.CANCELED, user, null);
+                        orderRequest.getAddress(), Instant.now(), OrderStatus.PROCESSING, user, null);
         OrderEntity savedOrder = orderRepository.save(orderEntity);
         orderRepository.flush();
 

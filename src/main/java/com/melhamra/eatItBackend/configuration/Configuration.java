@@ -26,10 +26,7 @@ public class Configuration {
 
     @Bean
     public CommandLineRunner start(){
-        return args -> {
-            imageService.init();
-            System.out.println(OrderStatus.DELIVERED.getStatus());
-        };
+        return args -> imageService.init();
     }
 
 }
