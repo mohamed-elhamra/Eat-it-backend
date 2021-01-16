@@ -8,5 +8,7 @@ import java.util.Date;
 public class ErrorMessage {
 
     private Date timestamp;
+    private String exception;
     private String message;
+    private String cause;
 }

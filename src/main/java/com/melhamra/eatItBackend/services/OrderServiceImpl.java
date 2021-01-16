@@ -19,8 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Optional;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -43,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
         UserEntity user = userRepository.findByPublicId(orderRequest.getUserPublicId())
                 .orElseThrow(() -> new EatItException("No user found with this id: " + orderRequest.getUserPublicId()));
         OrderEntity orderEntity =
-                new OrderEntity(null, idGenerator.generateStringId(20),
+                new OrderEntity(null, idGenerator.generateStringId(15),
                         orderRequest.getAddress(), Instant.now(), OrderStatus.PROCESSING, user, null);
         OrderEntity savedOrder = orderRepository.save(orderEntity);
         orderRepository.flush();

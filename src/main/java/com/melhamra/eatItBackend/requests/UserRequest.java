@@ -12,7 +12,7 @@ import javax.validation.constraints.*;
 public class UserRequest {
 
     @NotBlank(message = "Full name should not be empty")
-    @Size(min = 5, max = 20, message = "Full name should be between 3 and 20 character")
+    @Size(min = 5, max = 20, message = "Full name should be between 5 and 20 character")
     private String fullName;
     @Email(message = "Email format is incorrect")
     @NotNull(message = "Email should not be null")

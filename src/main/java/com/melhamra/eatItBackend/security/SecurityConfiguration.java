@@ -38,6 +38,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .hasAuthority("admin")
                 .antMatchers(HttpMethod.POST, "/products")
                 .hasAuthority("admin")
+                .antMatchers(HttpMethod.POST, "/categories")
+                .hasAuthority("admin")
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(getAuthenticationFilter())

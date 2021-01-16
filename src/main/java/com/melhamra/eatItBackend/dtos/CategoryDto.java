@@ -4,17 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDto {
+public class CategoryDto {
 
     private Long id;
     private String publicId;
     private String name;
-    private String description;
-    private double price;
-    private ImageDto image;
-    private String categoryPublicId;
+    private List<ProductDto> products;
 
 }
+

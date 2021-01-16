@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -32,5 +33,9 @@ public class ProductEntity {
 
     @OneToMany(mappedBy = "product")
     private List<OrderProductEntity> orderProducts;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private CategoryEntity category;
 
 }

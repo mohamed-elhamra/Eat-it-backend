@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
         });
 
         UserEntity createdUser = modelMapper.map(userDto, UserEntity.class);
-        createdUser.setPublicId(idGenerator.generateStringId(30));
+        createdUser.setPublicId(idGenerator.generateStringId(15));
         createdUser.setEncryptedPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
 
         return modelMapper.map(userRepository.save(createdUser), UserDto.class);
@@ -82,12 +82,10 @@ public class UserServiceImpl implements UserService {
             orderResponse.setUserPublicId(publicId);
 
             List<OrderProductEntity> orderProductEntities = orderProductRepository.findByOrder(order);
-            orderProductEntities.forEach(orderProductEntity -> {
-                orderResponse.getOrderProducts()
-                        .add(new OrderProductResponse(orderProductEntity.getQuantity(),
-                                orderProductEntity.getProduct().getPublicId(),
-                                orderProductEntity.getProduct().getName()));
-            });
+            orderProductEntities.forEach(orderProductEntity -> orderResponse.getOrderProducts()
+                    .add(new OrderProductResponse(orderProductEntity.getQuantity(),
+                            orderProductEntity.getProduct().getPublicId(),
+                            orderProductEntity.getProduct().getName())));
             orderResponses.add(orderResponse);
         });
         return orderResponses;
