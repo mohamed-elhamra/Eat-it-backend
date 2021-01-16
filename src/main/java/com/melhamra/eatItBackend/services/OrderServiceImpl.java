@@ -17,6 +17,7 @@ import com.melhamra.eatItBackend.utils.OrderStatus;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 
@@ -36,6 +37,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     IDGenerator idGenerator;
 
+    @Transactional
     @Override
     public OrderResponse createOrder(OrderRequest orderRequest) {
         UserEntity user = userRepository.findByPublicId(orderRequest.getUserPublicId())
@@ -55,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
 
         orderRequest.getOrderProducts().forEach(orderProductRequest -> {
             ProductEntity product = productRepository.findByPublicId(orderProductRequest.getProductPublicId())
-                    .orElseThrow(() -> new EatItException("No user found with this id: " + orderProductRequest.getProductPublicId()));
+                    .orElseThrow(() -> new EatItException("No product found with this id: " + orderProductRequest.getProductPublicId()));
             OrderProductEntity orderProductEntity =
                     new OrderProductEntity(null, orderProductRequest.getQuantity(), savedOrder, product);
             OrderProductEntity savedOrderProductEntity = orderProductRepository.save(orderProductEntity);

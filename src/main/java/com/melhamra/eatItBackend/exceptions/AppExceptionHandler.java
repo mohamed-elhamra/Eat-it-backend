@@ -49,7 +49,9 @@ public class AppExceptionHandler {
         errorMessage.setTimestamp(new Date());
         errorMessage.setException(ex.getClass().getName());
         errorMessage.setMessage(ex.getMessage());
-        errorMessage.setCause(ex.getCause().getMessage());
+        if(ex.getCause() != null){
+            errorMessage.setCause(ex.getCause().getMessage());
+        }
         return errorMessage;
     }
 
