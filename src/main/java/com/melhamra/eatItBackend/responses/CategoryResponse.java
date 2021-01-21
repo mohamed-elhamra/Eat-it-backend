@@ -11,5 +11,6 @@ public class CategoryResponse {
 
     private String publicId;
     private String name;
+    private String imageUrl;
 
 }

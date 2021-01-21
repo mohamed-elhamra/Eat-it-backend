@@ -1,8 +1,10 @@
 package com.melhamra.eatItBackend.services;
 
 import com.melhamra.eatItBackend.dtos.CategoryDto;
+import com.melhamra.eatItBackend.dtos.ImageDto;
 import com.melhamra.eatItBackend.dtos.ProductDto;
 import com.melhamra.eatItBackend.entities.CategoryEntity;
+import com.melhamra.eatItBackend.entities.ImageEntity;
 import com.melhamra.eatItBackend.exceptions.EatItException;
 import com.melhamra.eatItBackend.repositories.CategoryRepository;
 import com.melhamra.eatItBackend.repositories.ProductRepository;
@@ -10,6 +12,7 @@ import com.melhamra.eatItBackend.utils.IDGenerator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,6 +20,8 @@ import java.util.stream.Collectors;
 @Service
 public class CategoryServiceImpl implements CategoryService{
 
+    @Autowired
+    ImageService imageService;
     @Autowired
     ProductRepository productRepository;
     @Autowired
@@ -28,9 +33,11 @@ public class CategoryServiceImpl implements CategoryService{
 
 
     @Override
-    public CategoryDto createCategory(CategoryDto categoryDto) {
-        CategoryEntity categoryEntity = modelMapper.map(categoryDto, CategoryEntity.class);
-        categoryEntity.setPublicId(idGenerator.generateStringId(15));
+    public CategoryDto createCategory(String name, MultipartFile image) {
+        ImageDto imageDto = imageService.save(image);
+        CategoryEntity categoryEntity =
+                new CategoryEntity(null, idGenerator.generateStringId(15),
+                        name, modelMapper.map(imageDto, ImageEntity.class), null);
 
         return modelMapper.map(categoryRepository.save(categoryEntity), CategoryDto.class);
     }

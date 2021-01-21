@@ -20,6 +20,10 @@ public class CategoryEntity {
     @Column(length = 20, nullable = false)
     private String name;
 
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "image_id", referencedColumnName = "id")
+    private ImageEntity image;
+
     @OneToMany(mappedBy = "category")
     private List<ProductEntity> products;
 
