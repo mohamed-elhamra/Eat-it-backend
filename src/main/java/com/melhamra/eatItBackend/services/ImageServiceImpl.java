@@ -54,7 +54,7 @@ public class ImageServiceImpl implements ImageService {
                 Files.createDirectory(root);
             }
         } catch (IOException e) {
-            throw new EatItException("Could not initialize folder for upload!");
+            throw new EatItException("Could not initialize folder for upload");
         }
     }
 
@@ -73,7 +73,7 @@ public class ImageServiceImpl implements ImageService {
 
                 return modelMapper.map(imageRepository.save(imageEntity), ImageDto.class);
             } else {
-                throw new EatItException("File extension allowed (png, jpeg, jpg) !");
+                throw new EatItException("File extension allowed (png, jpeg, jpg)");
             }
 
         } catch (Exception e) {
@@ -92,7 +92,7 @@ public class ImageServiceImpl implements ImageService {
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new EatItException("Could not read the file!");
+                throw new EatItException("Could not read the file");
             }
         } catch (MalformedURLException e) {
             throw new EatItException("Error: " + e.getMessage());

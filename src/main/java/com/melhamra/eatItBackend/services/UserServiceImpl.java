@@ -43,12 +43,12 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserDto userDto) {
         Optional<UserEntity> userByEmail = userRepository.findByEmail(userDto.getEmail());
         userByEmail.ifPresent(user -> {
-            throw new EatItException("User already exits with this email !");
+            throw new EatItException("User already exits with this email");
         });
 
         Optional<UserEntity> userByPhone = userRepository.findByPhone(userDto.getPhone());
         userByPhone.ifPresent(user -> {
-            throw new EatItException("User already exits with this phone !");
+            throw new EatItException("User already exits with this phone");
         });
 
         UserEntity createdUser = modelMapper.map(userDto, UserEntity.class);
