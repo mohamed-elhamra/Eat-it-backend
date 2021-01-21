@@ -43,6 +43,13 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
+    public List<CategoryDto> getAllCategories() {
+        return categoryRepository.findAll().stream()
+                .map(categoryEntity -> modelMapper.map(categoryEntity, CategoryDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<ProductDto> getProductsByCategory(String categoryPublicId) {
         CategoryEntity category = categoryRepository.findByPublicId(categoryPublicId)
                 .orElseThrow(() -> new EatItException("No category found with this id: " + categoryPublicId));

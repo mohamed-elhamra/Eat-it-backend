@@ -25,14 +25,22 @@ public class CategoryController {
     ModelMapper modelMapper;
 
     @PostMapping
-    public ResponseEntity<CategoryResponse> createResponse(@RequestParam("name") String name, @RequestParam("image") MultipartFile image){
+    public ResponseEntity<CategoryResponse> createResponse(@RequestParam("name") String name, @RequestParam("image") MultipartFile image) {
         CategoryDto category = categoryService.createCategory(name, image);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(modelMapper.map(category, CategoryResponse.class));
     }
 
+    @GetMapping
+    public ResponseEntity<List<CategoryResponse>> getAllCategories() {
+        List<CategoryResponse> categories = categoryService.getAllCategories().stream()
+                .map(categoryDto -> modelMapper.map(categoryDto, CategoryResponse.class))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(categories);
+    }
+
     @GetMapping("/{categoryPublicId}/products")
-    public ResponseEntity<List<ProductResponse>> getProductsByCategory(@PathVariable String categoryPublicId){
+    public ResponseEntity<List<ProductResponse>> getProductsByCategory(@PathVariable String categoryPublicId) {
         List<ProductResponse> products = categoryService.getProductsByCategory(categoryPublicId).stream()
                 .map(productDto -> modelMapper.map(productDto, ProductResponse.class))
                 .collect(Collectors.toList());

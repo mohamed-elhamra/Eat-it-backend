@@ -10,6 +10,8 @@ public interface CategoryService {
 
     CategoryDto createCategory(String name, MultipartFile image);
 
+    List<CategoryDto> getAllCategories();
+
     List<ProductDto> getProductsByCategory(String categoryPublicId);
 
 }
