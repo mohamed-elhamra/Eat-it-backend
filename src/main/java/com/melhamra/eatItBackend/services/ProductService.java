@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ProductService {
 
-    ProductDto createProduct(ProductDto productDto, MultipartFile multipartFile) ;
+    ProductDto createProduct(ProductDto productDto, MultipartFile multipartFile);
 
     List<ProductDto> getAllProducts();
 

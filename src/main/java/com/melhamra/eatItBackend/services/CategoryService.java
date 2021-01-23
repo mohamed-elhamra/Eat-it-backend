@@ -14,4 +14,6 @@ public interface CategoryService {
 
     List<ProductDto> getProductsByCategory(String categoryPublicId);
 
+    void deleteCategory(String publicId);
+
 }

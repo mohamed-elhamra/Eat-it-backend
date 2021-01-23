@@ -24,7 +24,7 @@ public class CategoryEntity {
     @JoinColumn(name = "image_id", referencedColumnName = "id")
     private ImageEntity image;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
     private List<ProductEntity> products;
 
 }

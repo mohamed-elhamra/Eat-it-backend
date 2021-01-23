@@ -118,4 +118,16 @@ public class ImageServiceImpl implements ImageService {
             throw new EatItException("Could not load the files!");
         }
     }
+
+    @Override
+    public void delete(String publicId) {
+        ImageEntity imageEntity = imageRepository.findByPublicId(publicId)
+                .orElseThrow(() -> new RuntimeException("Image not found with this id: " + publicId));
+        Path imagePath = root.resolve(imageEntity.getName());
+        try{
+            Files.delete(imagePath);
+        }catch(IOException exception){
+            throw new EatItException("Could not delete the image");
+        }
+    }
 }

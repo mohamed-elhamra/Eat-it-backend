@@ -25,7 +25,7 @@ public class CategoryController {
     ModelMapper modelMapper;
 
     @PostMapping
-    public ResponseEntity<CategoryResponse> createResponse(@RequestParam("name") String name, @RequestParam("image") MultipartFile image) {
+    public ResponseEntity<CategoryResponse> createCategory(@RequestParam("name") String name, @RequestParam("image") MultipartFile image) {
         CategoryDto category = categoryService.createCategory(name, image);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(modelMapper.map(category, CategoryResponse.class));
@@ -46,6 +46,12 @@ public class CategoryController {
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(products);
+    }
+
+    @DeleteMapping("/{categoryPublicId}")
+    public ResponseEntity<String> deleteCategory(@PathVariable String categoryPublicId){
+        categoryService.deleteCategory(categoryPublicId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Deleted successfully");
     }
 
 }

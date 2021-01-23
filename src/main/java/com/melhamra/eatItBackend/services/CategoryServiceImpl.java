@@ -12,6 +12,7 @@ import com.melhamra.eatItBackend.utils.IDGenerator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class CategoryServiceImpl implements CategoryService{
     IDGenerator idGenerator;
 
 
+    @Transactional
     @Override
     public CategoryDto createCategory(String name, MultipartFile image) {
         ImageDto imageDto = imageService.save(image);
@@ -57,5 +59,14 @@ public class CategoryServiceImpl implements CategoryService{
         return productRepository.findByCategory(category).stream()
                 .map(productEntity -> modelMapper.map(productEntity, ProductDto.class))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    @Override
+    public void deleteCategory(String publicId) {
+        CategoryEntity category = categoryRepository.findByPublicId(publicId)
+                .orElseThrow(() -> new EatItException("No category found with this id: " + publicId));
+        imageService.delete(category.getImage().getPublicId());
+        categoryRepository.delete(category);
     }
 }

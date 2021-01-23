@@ -17,4 +17,6 @@ public interface ImageService {
 
     List<ImageResponse> loadAll();
 
+    void delete(String publicId);
+
 }

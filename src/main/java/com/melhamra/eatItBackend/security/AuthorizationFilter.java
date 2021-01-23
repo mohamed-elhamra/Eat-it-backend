@@ -28,7 +28,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String token = request.getHeader(SecurityConstants.HEADER_STRING);
 
-        if(token == null || !token.startsWith(SecurityConstants.TOKEN_PREFIX)){
+        if(token == null || !token.startsWith(SecurityConstants.TOKEN_PREFIX) || token.equals("Bearer null")){
             chain.doFilter(request, response);
             return;
         }
