@@ -56,4 +56,13 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    @Override
+    public void deleteProduct(String productPublicId) {
+        ProductEntity product = productRepository.findByPublicId(productPublicId)
+                .orElseThrow(() -> new EatItException("No product found with this id: " + productPublicId));
+        imageService.delete(product.getImage().getPublicId());
+        productRepository.delete(product);
+    }
+
 }

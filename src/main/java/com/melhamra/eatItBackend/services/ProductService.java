@@ -11,4 +11,6 @@ public interface ProductService {
 
     List<ProductDto> getAllProducts();
 
+    void deleteProduct(String productPublicId);
+
 }

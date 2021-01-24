@@ -67,6 +67,7 @@ public class CategoryServiceImpl implements CategoryService{
         CategoryEntity category = categoryRepository.findByPublicId(publicId)
                 .orElseThrow(() -> new EatItException("No category found with this id: " + publicId));
         imageService.delete(category.getImage().getPublicId());
+        category.getProducts().forEach(productEntity -> imageService.delete(productEntity.getImage().getPublicId()));
         categoryRepository.delete(category);
     }
 }
