@@ -17,6 +17,8 @@ public class OrderProductEntity {
     private Long id;
     @Column(nullable = false)
     private int quantity;
+    @Column(nullable = false)
+    private double price;
 
     @ManyToOne
     @JoinColumn(name = "order_id")

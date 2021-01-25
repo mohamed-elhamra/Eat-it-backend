@@ -84,6 +84,7 @@ public class UserServiceImpl implements UserService {
             List<OrderProductEntity> orderProductEntities = orderProductRepository.findByOrder(order);
             orderProductEntities.forEach(orderProductEntity -> orderResponse.getOrderProducts()
                     .add(new OrderProductResponse(orderProductEntity.getQuantity(),
+                            orderProductEntity.getPrice(),
                             orderProductEntity.getProduct().getPublicId(),
                             orderProductEntity.getProduct().getName())));
             orderResponses.add(orderResponse);

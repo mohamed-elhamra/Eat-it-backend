@@ -59,10 +59,11 @@ public class OrderServiceImpl implements OrderService {
             ProductEntity product = productRepository.findByPublicId(orderProductRequest.getProductPublicId())
                     .orElseThrow(() -> new EatItException("No product found with this id: " + orderProductRequest.getProductPublicId()));
             OrderProductEntity orderProductEntity =
-                    new OrderProductEntity(null, orderProductRequest.getQuantity(), savedOrder, product);
+                    new OrderProductEntity(null, orderProductRequest.getQuantity(), product.getPrice(), savedOrder, product);
             OrderProductEntity savedOrderProductEntity = orderProductRepository.save(orderProductEntity);
             orderResponse.getOrderProducts()
                     .add(new OrderProductResponse(savedOrderProductEntity.getQuantity(),
+                            savedOrderProductEntity.getPrice(),
                             savedOrderProductEntity.getProduct().getPublicId(),
                             savedOrderProductEntity.getProduct().getName()));
         });
@@ -71,7 +72,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderResponse getOrderByPublicId(String publicId) {
-        OrderResponse orderResponse = new OrderResponse();
         OrderEntity orderEntity = orderRepository.findByPublicId(publicId)
                 .orElseThrow(() -> new EatItException("No order found with this id: " + publicId));
 
