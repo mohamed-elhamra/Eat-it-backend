@@ -68,4 +68,13 @@ public class OrderServiceImpl implements OrderService {
         });
         return orderResponse;
     }
+
+    @Override
+    public OrderResponse getOrderByPublicId(String publicId) {
+        OrderResponse orderResponse = new OrderResponse();
+        OrderEntity orderEntity = orderRepository.findByPublicId(publicId)
+                .orElseThrow(() -> new EatItException("No order found with this id: " + publicId));
+
+        return modelMapper.map(orderEntity, OrderResponse.class);
+    }
 }

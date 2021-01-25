@@ -7,4 +7,6 @@ public interface OrderService {
 
     OrderResponse createOrder(OrderRequest orderRequest);
 
+    OrderResponse getOrderByPublicId(String publicId);
+
 }
