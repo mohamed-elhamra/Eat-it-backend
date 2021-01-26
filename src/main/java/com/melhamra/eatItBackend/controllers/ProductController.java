@@ -27,8 +27,8 @@ public class ProductController {
                                                          @RequestParam("description") String description,
                                                          @RequestParam("price") double price,
                                                          @RequestParam("category") String category,
-                                                         @RequestParam("image") MultipartFile image){
-        ProductDto productDto = new ProductDto(null,null, name, description, price, null,  category);
+                                                         @RequestParam("image") MultipartFile image) {
+        ProductDto productDto = new ProductDto(null, null, name, description, price, null, category);
         ProductDto createdProduct = productService.createProduct(productDto, image);
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -36,15 +36,28 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAllProducts(){
+    public ResponseEntity<List<ProductResponse>> getAllProducts() {
         List<ProductResponse> products = productService.getAllProducts().stream()
                 .map(productDto -> modelMapper.map(productDto, ProductResponse.class))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(products);
     }
 
+    @PatchMapping("/{productPublicId}")
+    public ResponseEntity<ProductResponse> updateProduct(@PathVariable String productPublicId,
+                                                         @RequestParam("name") String name,
+                                                         @RequestParam("description") String description,
+                                                         @RequestParam("price") double price,
+                                                         @RequestParam("category") String category,
+                                                         @RequestParam("image") MultipartFile image){
+        ProductDto productDto = new ProductDto(null, null, name, description, price, null, category);
+        ProductDto updatedProduct = productService.updateProduct(productPublicId, productDto, image);
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(modelMapper.map(updatedProduct, ProductResponse.class));
+    }
+
     @DeleteMapping("{productPublicId}")
-    public ResponseEntity<?> deleteProduct(@PathVariable String productPublicId){
+    public ResponseEntity<?> deleteProduct(@PathVariable String productPublicId) {
         productService.deleteProduct(productPublicId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

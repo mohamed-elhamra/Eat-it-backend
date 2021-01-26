@@ -9,6 +9,8 @@ public interface ProductService {
 
     ProductDto createProduct(ProductDto productDto, MultipartFile multipartFile);
 
+    ProductDto updateProduct(String productPublicId, ProductDto productDto, MultipartFile multipartFile);
+
     List<ProductDto> getAllProducts();
 
     void deleteProduct(String productPublicId);

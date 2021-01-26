@@ -7,6 +7,7 @@ import com.melhamra.eatItBackend.entities.ImageEntity;
 import com.melhamra.eatItBackend.entities.ProductEntity;
 import com.melhamra.eatItBackend.exceptions.EatItException;
 import com.melhamra.eatItBackend.repositories.CategoryRepository;
+import com.melhamra.eatItBackend.repositories.ImageRepository;
 import com.melhamra.eatItBackend.repositories.ProductRepository;
 import com.melhamra.eatItBackend.utils.IDGenerator;
 import org.modelmapper.ModelMapper;
@@ -29,6 +30,8 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     ImageService imageService;
     @Autowired
+    ImageRepository imageRepository;
+    @Autowired
     ModelMapper modelMapper;
     @Autowired
     IDGenerator idGenerator;
@@ -37,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDto createProduct(ProductDto productDto, MultipartFile multipartFile) {
         ImageDto imageDto = imageService.save(multipartFile);
         CategoryEntity categoryEntity = categoryRepository.findByPublicId(productDto.getCategoryPublicId())
-                .orElseThrow(() -> new EatItException("Category not found with id: " + productDto.getCategoryPublicId()));
+                .orElseThrow(() -> new EatItException("Category not found with this id: " + productDto.getCategoryPublicId()));
 
         ProductEntity savedProduct =
                 new ProductEntity(null, idGenerator.generateStringId(15), productDto.getName(), productDto.getDescription(),
@@ -47,6 +50,28 @@ public class ProductServiceImpl implements ProductService {
         ProductEntity createdProduct = productRepository.save(savedProduct);
 
         return modelMapper.map(createdProduct, ProductDto.class);
+    }
+
+    @Transactional
+    @Override
+    public ProductDto updateProduct(String productPublicId, ProductDto productDto, MultipartFile multipartFile) {
+        ProductEntity productEntity = productRepository.findByPublicId(productPublicId)
+                .orElseThrow(() -> new EatItException("No product found with this id: " + productPublicId));
+        CategoryEntity categoryEntity = categoryRepository.findByPublicId(productDto.getCategoryPublicId())
+                .orElseThrow(() -> new EatItException("Category not found with this id: " + productDto.getCategoryPublicId()));
+
+        imageService.delete(productEntity.getImage().getPublicId());
+        ImageDto imageDto = imageService.save(multipartFile);
+        imageRepository.deleteByPublicId(productEntity.getImage().getPublicId());
+
+        productEntity.setName(productDto.getName());
+        productEntity.setDescription(productDto.getDescription());
+        productEntity.setPrice(productDto.getPrice());
+        productEntity.setImage(modelMapper.map(imageDto, ImageEntity.class));
+        productEntity.setCategory(categoryEntity);
+        ProductEntity updatedProduct = productRepository.save(productEntity);
+
+        return modelMapper.map(updatedProduct, ProductDto.class);
     }
 
     @Override
