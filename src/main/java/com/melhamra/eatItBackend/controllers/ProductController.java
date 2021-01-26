@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,13 +44,20 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+    @GetMapping("/{productPublicId}")
+    public ResponseEntity<ProductResponse> getProductByPublicId(@PathVariable String productPublicId) {
+        ProductResponse productResponse =
+                modelMapper.map(productService.getProductByPublicId(productPublicId), ProductResponse.class);
+        return ResponseEntity.ok(productResponse);
+    }
+
     @PatchMapping("/{productPublicId}")
     public ResponseEntity<ProductResponse> updateProduct(@PathVariable String productPublicId,
                                                          @RequestParam("name") String name,
                                                          @RequestParam("description") String description,
                                                          @RequestParam("price") double price,
                                                          @RequestParam("category") String category,
-                                                         @RequestParam("image") MultipartFile image){
+                                                         @RequestParam(name = "image", required = false) MultipartFile image){
         ProductDto productDto = new ProductDto(null, null, name, description, price, null, category);
         ProductDto updatedProduct = productService.updateProduct(productPublicId, productDto, image);
 

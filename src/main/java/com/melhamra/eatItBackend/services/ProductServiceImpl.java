@@ -60,18 +60,27 @@ public class ProductServiceImpl implements ProductService {
         CategoryEntity categoryEntity = categoryRepository.findByPublicId(productDto.getCategoryPublicId())
                 .orElseThrow(() -> new EatItException("Category not found with this id: " + productDto.getCategoryPublicId()));
 
-        imageService.delete(productEntity.getImage().getPublicId());
-        ImageDto imageDto = imageService.save(multipartFile);
-        imageRepository.deleteByPublicId(productEntity.getImage().getPublicId());
+        if(multipartFile != null){
+            imageService.delete(productEntity.getImage().getPublicId());
+            ImageDto imageDto = imageService.save(multipartFile);
+            imageRepository.deleteByPublicId(productEntity.getImage().getPublicId());
+            productEntity.setImage(modelMapper.map(imageDto, ImageEntity.class));
+        }
 
         productEntity.setName(productDto.getName());
         productEntity.setDescription(productDto.getDescription());
         productEntity.setPrice(productDto.getPrice());
-        productEntity.setImage(modelMapper.map(imageDto, ImageEntity.class));
         productEntity.setCategory(categoryEntity);
         ProductEntity updatedProduct = productRepository.save(productEntity);
 
         return modelMapper.map(updatedProduct, ProductDto.class);
+    }
+
+    @Override
+    public ProductDto getProductByPublicId(String productPublicId) {
+        ProductEntity productEntity = productRepository.findByPublicId(productPublicId)
+                .orElseThrow(() -> new EatItException("No product found with this id: " + productPublicId));
+        return modelMapper.map(productEntity, ProductDto.class);
     }
 
     @Override
