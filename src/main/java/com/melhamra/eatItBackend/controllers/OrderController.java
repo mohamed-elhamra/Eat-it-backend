@@ -27,4 +27,9 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getOrderByPublicId(orderPublicId));
     }
 
+    @PatchMapping("/{orderPublicId}")
+    public ResponseEntity<OrderResponse> updateStatus(@PathVariable String orderPublicId, @RequestParam String status){
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(orderService.updateStatus(orderPublicId, status));
+    }
+
 }

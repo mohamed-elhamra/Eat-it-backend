@@ -9,4 +9,6 @@ public interface OrderService {
 
     OrderResponse getOrderByPublicId(String publicId);
 
+    OrderResponse updateStatus(String publicId, String status);
+
 }

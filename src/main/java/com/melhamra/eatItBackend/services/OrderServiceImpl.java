@@ -77,4 +77,17 @@ public class OrderServiceImpl implements OrderService {
 
         return modelMapper.map(orderEntity, OrderResponse.class);
     }
+
+    @Override
+    public OrderResponse updateStatus(String publicId, String status) {
+        OrderEntity orderEntity = orderRepository.findByPublicId(publicId)
+                .orElseThrow(() -> new EatItException("No order found with this id: " + publicId));
+        for(OrderStatus orderStatus : OrderStatus.values()){
+            if(orderStatus.name().equals(status)){
+                orderEntity.setStatus(orderStatus);
+                orderRepository.save(orderEntity);
+            }
+        }
+        return modelMapper.map(orderEntity, OrderResponse.class);
+    }
 }
