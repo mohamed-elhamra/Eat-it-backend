@@ -38,6 +38,12 @@ public class UserController {
         return ResponseEntity.ok(userService.getOrdersByUser(publicId));
     }
 
+    @GetMapping("/{publicId}")
+    public ResponseEntity<UserResponse> getUserByPublicId(@PathVariable String publicId){
+        UserDto userDto = userService.getUserByPublicId(publicId);
+        return ResponseEntity.ok(modelMapper.map(userDto, UserResponse.class));
+    }
+
     @GetMapping
     public String hello(){
         return "Hello";
