@@ -4,6 +4,7 @@ import com.melhamra.eatItBackend.dtos.CategoryDto;
 import com.melhamra.eatItBackend.requests.CategoryRequest;
 import com.melhamra.eatItBackend.responses.CategoryResponse;
 import com.melhamra.eatItBackend.responses.ProductResponse;
+import com.melhamra.eatItBackend.responses.ProductStatisticsResponse;
 import com.melhamra.eatItBackend.services.CategoryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,12 @@ public class CategoryController {
     public ResponseEntity<String> deleteCategory(@PathVariable String categoryPublicId){
         categoryService.deleteCategory(categoryPublicId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Deleted successfully");
+    }
+
+    @GetMapping("/{categoryPublicId}/products/statistics")
+    public ResponseEntity<List<ProductStatisticsResponse>> productsStatistics(@PathVariable String categoryPublicId ,
+                                                                              @RequestParam("duration") String duration ){
+        return ResponseEntity.ok(categoryService.productStatistics(categoryPublicId, duration));
     }
 
 }

@@ -7,7 +7,10 @@ import com.melhamra.eatItBackend.entities.CategoryEntity;
 import com.melhamra.eatItBackend.entities.ImageEntity;
 import com.melhamra.eatItBackend.exceptions.EatItException;
 import com.melhamra.eatItBackend.repositories.CategoryRepository;
+import com.melhamra.eatItBackend.repositories.OrderProductRepository;
 import com.melhamra.eatItBackend.repositories.ProductRepository;
+import com.melhamra.eatItBackend.responses.ProductStatisticsResponse;
+import com.melhamra.eatItBackend.utils.Duration;
 import com.melhamra.eatItBackend.utils.IDGenerator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +18,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.Instant;
+import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class CategoryServiceImpl implements CategoryService{
+public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     ImageService imageService;
@@ -27,6 +32,8 @@ public class CategoryServiceImpl implements CategoryService{
     ProductRepository productRepository;
     @Autowired
     CategoryRepository categoryRepository;
+    @Autowired
+    OrderProductRepository orderProductRepository;
     @Autowired
     ModelMapper modelMapper;
     @Autowired
@@ -69,5 +76,32 @@ public class CategoryServiceImpl implements CategoryService{
         imageService.delete(category.getImage().getPublicId());
         category.getProducts().forEach(productEntity -> imageService.delete(productEntity.getImage().getPublicId()));
         categoryRepository.delete(category);
+    }
+
+    @Override
+    public List<ProductStatisticsResponse> productStatistics(String categoryPublicId, String duration) {
+        categoryRepository.findByPublicId(categoryPublicId)
+                .orElseThrow(() -> new EatItException("No category found with this id: " + categoryPublicId));
+        if (Duration.LAST_MONTH.toString().equals(duration)) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.MONTH, -1);
+
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.MONTH, 0);
+
+            Instant from = calendar.getTime().toInstant();
+            Instant to = cal.getTime().toInstant();
+            return orderProductRepository.getProductStatistics(categoryPublicId, from, to);
+        }
+        if (Duration.LAST_SEVEN_DAYS.toString().equals(duration)) {
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DATE, -7);
+
+            Instant from = cal.getTime().toInstant();
+            Instant to = Instant.now();
+
+            return orderProductRepository.getProductStatistics(categoryPublicId, from, to);
+        }
+        return null;
     }
 }

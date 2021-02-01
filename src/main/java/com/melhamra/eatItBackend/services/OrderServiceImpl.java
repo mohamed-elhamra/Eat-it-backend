@@ -12,14 +12,17 @@ import com.melhamra.eatItBackend.repositories.UserRepository;
 import com.melhamra.eatItBackend.requests.OrderRequest;
 import com.melhamra.eatItBackend.responses.OrderProductResponse;
 import com.melhamra.eatItBackend.responses.OrderResponse;
+import com.melhamra.eatItBackend.responses.UserByOrderStatisticsResponse;
 import com.melhamra.eatItBackend.utils.IDGenerator;
 import com.melhamra.eatItBackend.utils.OrderStatus;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -90,4 +93,11 @@ public class OrderServiceImpl implements OrderService {
         }
         return modelMapper.map(orderEntity, OrderResponse.class);
     }
+
+    @Override
+    public List<UserByOrderStatisticsResponse> ordersNumberByUser() {
+        return orderRepository.getNumberOfOrdersByUserStatistics(PageRequest.of(0, 5));
+    }
+
+
 }

@@ -46,7 +46,7 @@ public class Configuration {
                 }
             });
 
-            Calendar calendar = Calendar.getInstance();
+            /*Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.MONTH, -1);
 
             Calendar cal = Calendar.getInstance();
@@ -55,14 +55,19 @@ public class Configuration {
             Instant from = calendar.getTime().toInstant();
             Instant to = cal.getTime().toInstant();
 
-            /*LocalDateTime from = LocalDateTime.of(2020, Month.JANUARY, 29, 17,29,40,50000);
-            LocalDateTime to = LocalDateTime.of(2020, Month.JANUARY, 29, 17,43,45,50000);*/
+            System.out.println(from + " --> " + to);*/
+
+            /*Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DATE, -7);
+
+            Instant from = cal.getTime().toInstant();
+            Instant to = Instant.now();
 
             System.out.println(from + " --> " + to);
 
             orderProductRepository.getProductStatistics("7gimobHdoI0EG5v", from, to).forEach(statistic -> {
                 System.out.println(statistic.getProductPublicId() + " -- " + statistic.getNumberOfCommand() + " -- " + statistic.getQuantity());
-            });
+            });*/
         };
     }
 

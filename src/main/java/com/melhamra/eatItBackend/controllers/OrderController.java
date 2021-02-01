@@ -2,6 +2,7 @@ package com.melhamra.eatItBackend.controllers;
 
 import com.melhamra.eatItBackend.requests.OrderRequest;
 import com.melhamra.eatItBackend.responses.OrderResponse;
+import com.melhamra.eatItBackend.responses.UserByOrderStatisticsResponse;
 import com.melhamra.eatItBackend.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
@@ -31,5 +33,11 @@ public class OrderController {
     public ResponseEntity<OrderResponse> updateStatus(@PathVariable String orderPublicId, @RequestParam String status){
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(orderService.updateStatus(orderPublicId, status));
     }
+
+    @GetMapping("/ordersNumberByUser")
+    public ResponseEntity<List<UserByOrderStatisticsResponse>> getOrderStatistics(){
+        return ResponseEntity.ok(orderService.ordersNumberByUser());
+    }
+
 
 }
