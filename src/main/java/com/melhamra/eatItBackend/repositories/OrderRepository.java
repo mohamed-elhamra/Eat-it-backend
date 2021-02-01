@@ -18,7 +18,7 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
 
     Optional<OrderEntity> findByPublicId(String publicId);
 
-    @Query("select u.publicId as clientPublicId, u.orders.size as numberOfOrders " +
+    @Query("select u.publicId as clientPublicId, u.fullName as clientFullName, u.orders.size as numberOfOrders " +
             "from users as u " +
             "order by numberOfOrders desc")
     List<UserByOrderStatisticsResponse> getNumberOfOrdersByUserStatistics(Pageable pageable);
