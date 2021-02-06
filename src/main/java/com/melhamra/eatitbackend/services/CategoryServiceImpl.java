@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.Instant;
 import java.util.Calendar;
 import java.util.List;
+
 import java.util.stream.Collectors;
 
 @Service
@@ -38,6 +39,8 @@ public class CategoryServiceImpl implements CategoryService {
     ModelMapper modelMapper;
     @Autowired
     IDGenerator idGenerator;
+
+    private static final String MESSAGE = "No category found with this id: ";
 
 
     @Transactional
@@ -61,7 +64,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<ProductDto> getProductsByCategory(String categoryPublicId) {
         CategoryEntity category = categoryRepository.findByPublicId(categoryPublicId)
-                .orElseThrow(() -> new EatItException("No category found with this id: " + categoryPublicId));
+                .orElseThrow(() -> new EatItException(MESSAGE + categoryPublicId));
 
         return productRepository.findByCategory(category).stream()
                 .map(productEntity -> modelMapper.map(productEntity, ProductDto.class))
@@ -72,7 +75,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteCategory(String publicId) {
         CategoryEntity category = categoryRepository.findByPublicId(publicId)
-                .orElseThrow(() -> new EatItException("No category found with this id: " + publicId));
+                .orElseThrow(() -> new EatItException(MESSAGE + publicId));
         imageService.delete(category.getImage().getPublicId());
         category.getProducts().forEach(productEntity -> imageService.delete(productEntity.getImage().getPublicId()));
         categoryRepository.delete(category);
@@ -80,8 +83,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<ProductStatisticsResponse> productStatistics(String categoryPublicId, String duration) {
-        categoryRepository.findByPublicId(categoryPublicId)
-                .orElseThrow(() -> new EatItException("No category found with this id: " + categoryPublicId));
+        if(categoryRepository.findByPublicId(categoryPublicId).isEmpty()){
+            throw new EatItException(MESSAGE + categoryPublicId);
+        }
+
         if (Duration.LAST_MONTH.toString().equals(duration)) {
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.MONTH, -1);

@@ -1,6 +1,10 @@
 package com.melhamra.eatitbackend.security;
 
 public class SecurityConstants {
+
+    private SecurityConstants() {
+    }
+
     public static final String SIGN_UP_URL = "/users";
     public static final long EXPIRATION_TIME = 864_000_000; // 10 Days
     public static final String TOKEN_PREFIX = "Bearer ";

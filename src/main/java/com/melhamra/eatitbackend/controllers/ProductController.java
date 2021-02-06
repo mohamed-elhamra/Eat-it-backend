@@ -64,7 +64,7 @@ public class ProductController {
     }
 
     @DeleteMapping("{productPublicId}")
-    public ResponseEntity<?> deleteProduct(@PathVariable String productPublicId) {
+    public ResponseEntity<String> deleteProduct(@PathVariable String productPublicId) {
         productService.deleteProduct(productPublicId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

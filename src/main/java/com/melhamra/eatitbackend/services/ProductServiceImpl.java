@@ -35,6 +35,8 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     IDGenerator idGenerator;
 
+    private static final String MESSAGE = "No product found with this id: ";
+
     @Override
     public ProductDto createProduct(ProductDto productDto, MultipartFile multipartFile) {
         ImageDto imageDto = imageService.save(multipartFile);
@@ -55,11 +57,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto updateProduct(String productPublicId, ProductDto productDto, MultipartFile multipartFile) {
         ProductEntity productEntity = productRepository.findByPublicId(productPublicId)
-                .orElseThrow(() -> new EatItException("No product found with this id: " + productPublicId));
+                .orElseThrow(() -> new EatItException(MESSAGE + productPublicId));
         CategoryEntity categoryEntity = categoryRepository.findByPublicId(productDto.getCategoryPublicId())
                 .orElseThrow(() -> new EatItException("Category not found with this id: " + productDto.getCategoryPublicId()));
 
-        if(multipartFile != null){
+        if (multipartFile != null) {
             imageService.delete(productEntity.getImage().getPublicId());
             ImageDto imageDto = imageService.save(multipartFile);
             imageRepository.deleteByPublicId(productEntity.getImage().getPublicId());
@@ -78,7 +80,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDto getProductByPublicId(String productPublicId) {
         ProductEntity productEntity = productRepository.findByPublicId(productPublicId)
-                .orElseThrow(() -> new EatItException("No product found with this id: " + productPublicId));
+                .orElseThrow(() -> new EatItException(MESSAGE + productPublicId));
         return modelMapper.map(productEntity, ProductDto.class);
     }
 
@@ -93,7 +95,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProduct(String productPublicId) {
         ProductEntity product = productRepository.findByPublicId(productPublicId)
-                .orElseThrow(() -> new EatItException("No product found with this id: " + productPublicId));
+                .orElseThrow(() -> new EatItException(MESSAGE + productPublicId));
         imageService.delete(product.getImage().getPublicId());
         productRepository.delete(product);
     }

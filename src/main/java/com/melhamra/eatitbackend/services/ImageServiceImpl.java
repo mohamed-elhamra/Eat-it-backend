@@ -101,8 +101,10 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public List<ImageResponse> loadAll() {
+        Stream<Path> folderPath = null;
         try {
-            Stream<Path> imagesPath = Files.walk(this.root, 1).filter(path -> !path.equals(this.root)).map(this.root::relativize);
+            folderPath = Files.walk(this.root, 1);
+            Stream<Path> imagesPath = folderPath.filter(path -> !path.equals(this.root)).map(this.root::relativize);
 
             return imagesPath.map(path -> {
                 String imageName = path.getFileName().toString();
@@ -116,6 +118,9 @@ public class ImageServiceImpl implements ImageService {
             }).collect(Collectors.toList());
         } catch (IOException e) {
             throw new EatItException("Could not load the files!");
+        }finally {
+            assert folderPath != null;
+            folderPath.close();
         }
     }
 

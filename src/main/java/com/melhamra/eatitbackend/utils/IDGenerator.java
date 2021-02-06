@@ -8,8 +8,8 @@ import java.util.Random;
 @Component
 public class IDGenerator {
 
-    private final Random random = new SecureRandom();
-    private final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    private static final Random random = new SecureRandom();
+    private static final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
     public String generateStringId(int length){
         StringBuilder id = new StringBuilder(length);

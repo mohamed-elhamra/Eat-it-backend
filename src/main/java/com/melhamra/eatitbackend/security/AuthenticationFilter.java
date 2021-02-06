@@ -3,6 +3,7 @@ package com.melhamra.eatitbackend.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.melhamra.eatitbackend.configuration.SpringApplicationContext;
 import com.melhamra.eatitbackend.dtos.UserDto;
+import com.melhamra.eatitbackend.exceptions.EatItException;
 import com.melhamra.eatitbackend.requests.UserLoginRequest;
 import com.melhamra.eatitbackend.services.UserService;
 import io.jsonwebtoken.Jwts;
@@ -10,7 +11,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -29,14 +29,14 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
         try {
             UserLoginRequest userLoginRequest = new ObjectMapper().readValue(request.getInputStream(), UserLoginRequest.class);
             return this.authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(userLoginRequest.getEmail(), userLoginRequest.getPassword())
             );
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new EatItException(e.getMessage());
         }
     }
 

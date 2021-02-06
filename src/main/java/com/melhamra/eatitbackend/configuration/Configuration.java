@@ -38,11 +38,6 @@ public class Configuration {
                     imageRepository.save(imageEntity);
                 }
             });
-
-
-            orderProductRepository.getProductsStatisticsWithoutDuration("7gimobHdoI0EG5v").forEach(statistic -> {
-                System.out.println(statistic.getProductPublicId() + " -- " + statistic.getNumberOfCommand() + " -- " + statistic.getQuantity());
-            });
         };
     }
 

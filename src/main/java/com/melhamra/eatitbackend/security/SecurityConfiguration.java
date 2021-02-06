@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserService userService;
+    private static final String ADMIN = "admin";
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -35,11 +36,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/products")
                 .permitAll()
                 .antMatchers(HttpMethod.POST, "/images/upload")
-                .hasAuthority("admin")
+                .hasAuthority(ADMIN)
                 .antMatchers(HttpMethod.POST, "/products")
-                .hasAuthority("admin")
+                .hasAuthority(ADMIN)
                 .antMatchers(HttpMethod.POST, "/categories")
-                .hasAuthority("admin")
+                .hasAuthority(ADMIN)
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(getAuthenticationFilter())
