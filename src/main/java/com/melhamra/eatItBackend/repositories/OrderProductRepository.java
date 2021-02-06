@@ -17,7 +17,8 @@ public interface OrderProductRepository extends JpaRepository<OrderProductEntity
 
     List<OrderProductEntity> findByOrder(OrderEntity orderEntity);
 
-    @Query(value = "select p.public_id as productPublicId, COALESCE(count(op.id), 0) as numberOfCommand, COALESCE(sum(op.quantity), 0) as quantity " +
+    @Query(value = "select p.name as productName, p.public_id as productPublicId, " +
+            "COALESCE(count(op.id), 0) as numberOfCommand, COALESCE(sum(op.quantity), 0) as quantity " +
             "from categories as c " +
             "inner join products p on c.id = p.category_id " +
             "left join orders_products op on p.id = op.product_id " +
