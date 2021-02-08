@@ -22,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -104,9 +105,10 @@ public class UserServiceImpl implements UserService {
         UserEntity user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with this email: " + email));
 
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        Arrays.stream(user.getRoles().split(","))
-                .forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
+        Collection<GrantedAuthority> authorities =
+                Arrays.stream(user.getRoles().split(","))
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
 
         return new User(user.getEmail(), user.getEncryptedPassword(), authorities);
     }
