@@ -37,6 +37,7 @@ public class ProductServiceImpl implements ProductService {
 
     private static final String MESSAGE = "No product found with this id: ";
 
+    @Transactional
     @Override
     public ProductDto createProduct(ProductDto productDto, MultipartFile multipartFile) {
         ImageDto imageDto = imageService.save(multipartFile);

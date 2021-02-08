@@ -33,7 +33,6 @@ class UserServiceImplTest {
     private static OrderProductEntity orderProductEntity1;
     private static OrderProductEntity orderProductEntity2;
 
-
     @Autowired
     private UserService userService;
 
@@ -62,7 +61,8 @@ class UserServiceImplTest {
         orderEntity =
                 new OrderEntity(1L, "adzdaed", "Rue Tanger Madrid", Instant.now(), OrderStatus.DELIVERED, userEntity, null);
         userEntity.setOrders(Collections.singletonList(orderEntity));
-        ProductEntity productEntity1 = new ProductEntity(1L, "azdazd", "Margeritta Pizza", "Delicious Pizza just try it!", 3, null, null, categoryEntity);
+        ProductEntity productEntity1 =
+                new ProductEntity(1L, "azdazd", "Margeritta Pizza", "Delicious Pizza just try it!", 3, null, null, categoryEntity);
         ProductEntity productEntity2 =
                 new ProductEntity(2L, "azdzezd", "Cheese Pizza", "Delicious Pizza just try it!", 7, null, null, categoryEntity);
         orderProductEntity1 =
