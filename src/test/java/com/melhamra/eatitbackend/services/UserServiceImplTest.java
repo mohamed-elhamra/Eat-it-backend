@@ -51,24 +51,25 @@ class UserServiceImplTest {
     @BeforeAll
     public static void init() {
         email = "mohamed@gmail.com";
+
         CategoryEntity categoryEntity = new CategoryEntity(1L, "dzeff", "Pizza", null, null);
-        userEntity =
-                new UserEntity(1L, "mazda", "mohamed elhamra",
-                        "mohamed@gmail.com", "066666666", "zefezfzef", "user", null);
-        userDto =
-                new UserDto(1L, "afternoon", "mohamed elhamra",
-                        "mohamed@gmail.com", "067875599", "mohamed", "atrfedr", "user");
-        orderEntity =
-                new OrderEntity(1L, "adzdaed", "Rue Tanger Madrid", Instant.now(), OrderStatus.DELIVERED, userEntity, null);
+
+        userEntity = new UserEntity(1L, "mazda", "mohamed elhamra",
+                "mohamed@gmail.com", "066666666", "zefezfzef", "user", null);
+        userDto = new UserDto(1L, "afternoon", "mohamed elhamra",
+                "mohamed@gmail.com", "067875599", "mohamed", "atrfedr", "user");
+        orderEntity = new OrderEntity(1L, "adzdaed", "Rue Tanger Madrid",
+                Instant.now(), OrderStatus.DELIVERED, userEntity, null);
         userEntity.setOrders(Collections.singletonList(orderEntity));
-        ProductEntity productEntity1 =
-                new ProductEntity(1L, "azdazd", "Margeritta Pizza", "Delicious Pizza just try it!", 3, null, null, categoryEntity);
-        ProductEntity productEntity2 =
-                new ProductEntity(2L, "azdzezd", "Cheese Pizza", "Delicious Pizza just try it!", 7, null, null, categoryEntity);
-        orderProductEntity1 =
-                new OrderProductEntity(1L, 3, 3, orderEntity, productEntity1);
-        orderProductEntity2 =
-                new OrderProductEntity(2L, 4, 7, orderEntity, productEntity2);
+
+        ProductEntity productEntity1 = new ProductEntity(1L, "azdazd", "Margarita Pizza",
+                "Delicious Pizza just try it!", 3, null, null, categoryEntity);
+        ProductEntity productEntity2 = new ProductEntity(2L, "azdzezd", "Cheese Pizza",
+                "Delicious Pizza just try it!", 7, null, null, categoryEntity);
+
+        orderProductEntity1 = new OrderProductEntity(1L, 3, 3, orderEntity, productEntity1);
+        orderProductEntity2 = new OrderProductEntity(2L, 4, 7, orderEntity, productEntity2);
+
         orderEntity.setOrderProducts(Arrays.asList(orderProductEntity1, orderProductEntity2));
         productEntity1.setOrderProducts(Collections.singletonList(orderProductEntity1));
         productEntity2.setOrderProducts(Collections.singletonList(orderProductEntity2));

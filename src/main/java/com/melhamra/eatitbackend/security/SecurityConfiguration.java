@@ -45,7 +45,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilter(getAuthenticationFilter())
                 .addFilter(new AuthorizationFilter(authenticationManager()))
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
     protected AuthenticationFilter getAuthenticationFilter() throws Exception {
