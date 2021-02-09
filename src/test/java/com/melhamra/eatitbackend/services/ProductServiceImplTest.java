@@ -7,6 +7,7 @@ import com.melhamra.eatitbackend.entities.ImageEntity;
 import com.melhamra.eatitbackend.entities.ProductEntity;
 import com.melhamra.eatitbackend.exceptions.EatItException;
 import com.melhamra.eatitbackend.repositories.CategoryRepository;
+import com.melhamra.eatitbackend.repositories.ImageRepository;
 import com.melhamra.eatitbackend.repositories.ProductRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -47,6 +48,9 @@ class ProductServiceImplTest {
     @MockBean
     ProductRepository productRepository;
 
+    @MockBean
+    ImageRepository imageRepository;
+
     @BeforeAll
     public static void init() {
         imageDto =
@@ -76,8 +80,43 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void createProduct_WhenCategoryNotFound(){
+    void createProductTest_WhenCategoryNotFound(){
         Exception exception = Assertions.assertThrows(EatItException.class, () -> productService.createProduct(productDto, image));
+        String expectedMessage = "Category not found with this id: " + categoryEntity.getPublicId();
+        String actualMessage = exception.getMessage();
+        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    void updateProductTest(){
+        Mockito.when(productRepository.findByPublicId(productDto.getPublicId()))
+                .thenReturn(Optional.of(productEntity));
+        Mockito.when(categoryRepository.findByPublicId(productDto.getCategoryPublicId()))
+                .thenReturn(Optional.of(categoryEntity));
+        Mockito.doNothing().when(imageService).delete(productEntity.getImage().getPublicId());
+        Mockito.when(imageService.save(Mockito.any(MultipartFile.class)))
+                .thenReturn(imageDto);
+        Mockito.doNothing().when(imageRepository).deleteByPublicId(productEntity.getImage().getPublicId());
+        Mockito.when(productRepository.save(Mockito.any(ProductEntity.class)))
+                .thenReturn(productEntity);
+        Assertions.assertEquals(productDto, productService.updateProduct(productDto.getPublicId(), productDto, image));
+    }
+
+    @Test
+    void updateProductTest_WhenProductNotFound(){
+        Exception exception = Assertions
+                .assertThrows(EatItException.class, () -> productService.updateProduct("azdaefaefae", productDto, image));
+        String expectedMessage = "No product found with this id: " + productDto.getPublicId();
+        String actualMessage = exception.getMessage();
+        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    void updateProductTest_WhenCategoryNotFound(){
+        Mockito.when(productRepository.findByPublicId(productDto.getPublicId()))
+                .thenReturn(Optional.of(productEntity));
+        Exception exception = Assertions
+                .assertThrows(EatItException.class, () -> productService.updateProduct("azdaefaefae", productDto, image));
         String expectedMessage = "Category not found with this id: " + categoryEntity.getPublicId();
         String actualMessage = exception.getMessage();
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
