@@ -20,6 +20,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -118,6 +119,46 @@ class ProductServiceImplTest {
         Exception exception = Assertions
                 .assertThrows(EatItException.class, () -> productService.updateProduct("azdaefaefae", productDto, image));
         String expectedMessage = "Category not found with this id: " + categoryEntity.getPublicId();
+        String actualMessage = exception.getMessage();
+        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    void getProductByPublicIdTest(){
+        Mockito.when(productRepository.findByPublicId(productDto.getPublicId()))
+                .thenReturn(Optional.of(productEntity));
+        Assertions.assertEquals(productDto, productService.getProductByPublicId(productDto.getPublicId()));
+    }
+
+    @Test
+    void getProductByPublicIdTest_WhenUserNotFound(){
+        Exception exception = Assertions
+                .assertThrows(EatItException.class, () -> productService.getProductByPublicId("azdaefaefae"));
+        String expectedMessage = "No product found with this id: " + "azdaefaefae";
+        String actualMessage = exception.getMessage();
+        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    void getAllProductsTest(){
+        Mockito.when(productRepository.findAll()).thenReturn(Collections.singletonList(productEntity));
+        Assertions.assertEquals(Collections.singletonList(productDto), productService.getAllProducts());
+    }
+
+    @Test
+    void deleteProductTest(){
+        Mockito.when(productRepository.findByPublicId(productDto.getPublicId()))
+                .thenReturn(Optional.of(productEntity));
+        Mockito.doNothing().when(imageService).delete(productEntity.getImage().getPublicId());
+        productRepository.delete(productEntity);
+        Mockito.verify(productRepository, Mockito.times(1)).delete(productEntity);
+    }
+
+    @Test
+    void deleteProductTest_WhenProductNotFound(){
+        Exception exception = Assertions
+                .assertThrows(EatItException.class, () -> productService.deleteProduct("azdaefaefae"));
+        String expectedMessage = "No product found with this id: " + "azdaefaefae";
         String actualMessage = exception.getMessage();
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
     }
