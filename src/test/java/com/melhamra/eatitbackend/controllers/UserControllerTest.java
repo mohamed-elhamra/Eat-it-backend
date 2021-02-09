@@ -93,5 +93,18 @@ class UserControllerTest {
         Assertions.assertEquals(orderResponse, orderResponses.get(0));
     }
 
+    @Test
+    void getUserByPublicIdTest() throws Exception {
+        Mockito.when(userService.getUserByPublicId(Mockito.any(String.class)))
+                .thenReturn(userDto);
 
+        RequestBuilder request = MockMvcRequestBuilders.get("/users/{publicId}", "aabtert")
+                .contentType(MediaType.APPLICATION_JSON);
+        MvcResult result = mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        UserResponse userResponse = om.readValue(result.getResponse().getContentAsString(), UserResponse.class);
+        Assertions.assertEquals(userDto.getEmail(), userResponse.getEmail());
+    }
 }
