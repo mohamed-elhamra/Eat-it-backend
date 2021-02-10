@@ -41,6 +41,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .hasAuthority(ADMIN)
                 .antMatchers(HttpMethod.POST, "/categories")
                 .hasAuthority(ADMIN)
+                .antMatchers("/v2/api-docs",
+                        "/configuration/ui",
+                        "/swagger-resources/**",
+                        "/configuration/security",
+                        "/swagger-ui.html**",
+                        "/webjars/**")
+                .permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(getAuthenticationFilter())
