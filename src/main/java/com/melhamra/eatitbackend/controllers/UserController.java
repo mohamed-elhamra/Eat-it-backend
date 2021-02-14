@@ -44,6 +44,12 @@ public class UserController {
         return ResponseEntity.ok(modelMapper.map(userDto, UserResponse.class));
     }
 
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UserResponse> getUserByEmail(@PathVariable("email") String email){
+        UserDto userDto = userService.getUserByEmail(email);
+        return ResponseEntity.ok(modelMapper.map(userDto, UserResponse.class));
+    }
+
     @GetMapping
     public String hello(){
         return "Hello";
