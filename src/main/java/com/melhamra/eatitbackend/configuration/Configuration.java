@@ -34,7 +34,7 @@ public class Configuration {
             imageRepository.findAll().forEach(imageEntity -> {
                 assert serverAddress != null;
                 if (!serverAddress.equals(imageEntity.getUrl().substring(7, 20))) {
-                    imageEntity.setUrl("http://" + serverAddress + ":8080/api/images/" + imageEntity.getPublicId());
+                    imageEntity.setUrl("http://" + serverAddress + ":8080/api/v1/images/" + imageEntity.getPublicId());
                     imageRepository.save(imageEntity);
                 }
             });
